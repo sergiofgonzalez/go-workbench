@@ -1,0 +1,33 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+)
+
+func main() {
+	var lang string
+	flag.StringVar(&lang, "lang", "en", "The required language code (en, fr, es, de, ...)")
+	flag.Parse()
+
+
+	greeting := greet(language(lang))
+	fmt.Println(greeting)
+}
+
+type language string
+
+var greetings = map[language]string{
+	"en": "Hello, world!",
+	"fr": "Bonjour, le monde!",
+	"es": "Hola, mundo!",
+	"de": "Hallo, Welt!",
+}
+
+func greet(l language) string {
+	v, ok := greetings[l]
+	if ok {
+		return v
+	}
+	return fmt.Sprintf("unsupported language: %q", l)
+}
