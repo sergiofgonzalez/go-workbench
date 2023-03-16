@@ -149,5 +149,63 @@ Let's enhance our logger with a few best practices with respect to logging:
   + `level` &mdash; numeric value for the log level
   + `time` &mdash; the time at which the log was emitted using ticks.
   + `msg` &mdash; the message with all the values embedded into the string.
-  
+
 4. Update the tests to cover this new functionality.
+
+## v9
+
+Now the library is in a good state, so let's use it from a separate program to confirm that it works as expected. In order to do so, we'll leverage "go workspaces":
+
+1. Let's start by creating a module for the application that will consume the logging module we've been working on:
+
+    ```bash
+    mkdir hello-logger
+    go mod init hello-logger
+    ```
+
+2. Then create a "Hello, world!" program and run it.
+
+3. Initialize the workspace that will host both our logger library and the hello-logger program:
+
+    ```bash
+    $ pwd
+    [...]/logging-module-v9/hello-logger
+
+    $ cd ..
+    go work init ./hello-logger
+    ```
+
+4. At this point, a `go.work` file will be created, and you will be able to do:
+
+    ```bash
+    go run hello-logger
+    ```
+
+5. Now, we can bring the logging library. You need to copy the `pocketlog/` directory into the workspace directory. Also, as we created the `go.mod` outside of the `pocketlog/` dir, we will need to include it there:
+
+    ```bash
+    # check we're in the workspace directory
+    $ pwd
+    [...]/logging-module-v9
+
+    # copy the pocketlog source code dir
+    $ cp -rf ../logging-module-v8/pocketlog .
+
+    # copy the `go.mod` file to the pocketlog source code dir
+    $ cp ../logging-module-v8/go.mod ./pocketlog/
+
+    # update the workspace file
+    $ go work use ./pocketlog
+    ```
+
+6. At this point, the `go.work` file would have been updated, and you can work on the `hello-logger` source code and `pocketlog` at the same time. Also, you will be able to reference `pocketlog` from `hello-logger` and use it.
+
+    Modify `hello-logger/main.go` so that it uses `pocketlog`. Note that if you open the workspace directory in VSCode, you'll get autocomplete for the workspace modules.
+
+7. Run `go run hello-logger` and validate that the logger works as expected:
+
+    ```go
+    $ go run hello-logger/
+    [INFO]  Hi, this is an informational message!
+    [ERROR] Hi, this is an error message!
+    ```

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-GO_VERSION="1.20.1"
+GO_VERSION="1.20.2"
 
 
 mkdir -p ~/Downloads/go
