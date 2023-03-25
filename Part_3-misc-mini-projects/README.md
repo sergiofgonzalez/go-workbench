@@ -7,3 +7,5 @@
 ## [01 &mdash; Polyglot Hello, world!](01_mini-projects/01_polyglot-hello-world/README.md)
 
 ## [02 &mdash; Custom logging module](01_mini-projects/02_logging-module/README.md)
+
+## [03 &mdash; Wordle in Go](02_mini-projects/03_)
