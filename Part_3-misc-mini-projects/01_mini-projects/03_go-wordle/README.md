@@ -101,6 +101,18 @@ The `errors` package provides the function `errors.Is()` which reports whether a
 
 ## v4: check for victory
 
-## ToDo
+In this version, we will check if the player's input matches the solution, allowing them to try for a given number of attempts.
 
--[ ] Create sample on error handling, including `errors.Is()` usage.
+1. Enrich the Game structure so that it includes the `solution` as a `rune[]` and the `maxAttempts` as an int.
+
+2. Update the `New` function, so that it receives now the solution and the maxAttempts as arguments and wire them into the `Game` structure. HINT: In order to simplify the management, define the solution as a `string` and apply `splitToUppercaseCharacters` to the argument received.
+
+3. Modify the `play` method so that after showing the initial message "Welcome To Gordle!" then enters a loop for `maxAttempts`. If the `guess` taken from the user is equal to the solution, a message informing the use that they have guessed the word in x number of guesses and that the word was the solution should be printed. If after `maxAttempts` the user has not guessed the solution, show a message informing the user they've lost the game and what the solution was. HINT: make the messages attractive using emojis (Win-. in Windows).
+
+4. Remove the `wordLength` constant and refactor the code accordingly.
+
+5. Update the tests to validate they're still working.
+
+6. Update the `main.go` file so that you can start playing. For now, set the word as a hardcoded value.
+
+## ToDo

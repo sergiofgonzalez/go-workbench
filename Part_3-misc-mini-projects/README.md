@@ -8,4 +8,8 @@
 
 ## [02 &mdash; Custom logging module](01_mini-projects/02_logging-module/README.md)
 
-## [03 &mdash; Wordle in Go](02_mini-projects/03_)
+## [03 &mdash; Wordle in Go](01_mini-projects/03_go-wordle/README.md)
+
+## [04 &mdash; Read file in Go](01_mini-projects/04_read-file/README.md)
+
+## [05 &mdash; Tracing lib using defer](01_mini-projects/05_tracing-defer/README.md)
