@@ -13,3 +13,5 @@
 ## [04 &mdash; Read file in Go](01_mini-projects/04_read-file/README.md)
 
 ## [05 &mdash; Tracing lib using defer](01_mini-projects/05_tracing-defer/README.md)
+
+## [06 &mdash; Hello, HTTP using gin](01)

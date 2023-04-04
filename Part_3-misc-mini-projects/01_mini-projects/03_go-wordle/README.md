@@ -115,4 +115,22 @@ In this version, we will check if the player's input matches the solution, allow
 
 6. Update the `main.go` file so that you can start playing. For now, set the word as a hardcoded value.
 
+## v5: providing feedback to the user
+
+The game, in its current installment, is very difficult to win. Our task is to make user's life easier by letting them know which characters of that word are in the correct position, which are in the wrong position, and which simply don't appear in the solution.
+
+The feedback will be a list of indications that can have three values: correct position, misplaced but found in the word, and absent.
+
+1. Create a file `hint.go` in the `gordle` package in which you define a type `hint` as a byte.
+
+2. In the same file, define the enumeration `absentCharacter`, `wrongPosition`, and `correctPosition`.
+
+3. Implement the `Stringer` interface for the `hint` type. Within the method, you will return ⬜️ if the character is absent from the word, 🟡 if a character is found in the word, but in the wrong position, 💚 is the character is found in the correct position, 💔 if none of the previous one is matched (which shouldn't happen).
+
+4. Define a new type `feedback` as a slice of the `hint` type recently defined.
+
+5. Define a method `String` on the feedback type that takes nothing and return a string in which each character is the string representation of the individual hint. Use the ``strings.Builder` type to do so to minimize the number of memory allocations.
+
+6. Write a test for the `feedback.String()` method.
+
 ## ToDo
