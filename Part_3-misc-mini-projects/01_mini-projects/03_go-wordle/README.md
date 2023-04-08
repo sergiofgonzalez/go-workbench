@@ -133,4 +133,118 @@ The feedback will be a list of indications that can have three values: correct p
 
 6. Write a test for the `feedback.String()` method.
 
+## v6: Checking the guess algorithm
+
+1. Define a function `computeFeedback` that takes a guess and a solution and returns a `feedback` in the `game.go` file. Make guess and solution a `[]rune`.
+
+
+2. Study the following algorithm which will be implemented next (this one in pseudo-code):
+
+        ```
+        for all characters of the guess {
+            mark character as absent
+        }
+
+        for each character of the attempt {
+            if the character in solution and guess are the same
+                mark character as seen in the solution
+                mark character with correct position
+        }
+
+        for each character of the guess {
+            if current character already has a hint {
+                skip to the next character
+            }
+
+            if character is in the solution and not yet seen {
+                mark character as seen in the solution
+                mark character with correct position status
+            }
+
+        }
+
+        return the hints
+        ```
+
+3. Implement the function by using a slice of hints to mark characters of the guess with their appropriate hint, and a slice of booleans to mark the characters of the solution as either seen or not yet seen.
+
+4. Implement a test for the `computeFeedback` function. Hint: Define an `Equal` method in `hint.go` that determines that two feedbacks are equal. While you can use `slices.Equal` implement it yourself there.
+
+5. Integrate the `computeFeedback` invocation in the `Play` function and display the feedback right after that.
+
+## v7: adding random words
+
+1. Create a directory `corpus/` with a file names `english.txt`. This file will contain a list of uppercase English words, one per line.
+
+2. Create a new file `corpus.go` where all the method releated to the solution words will be added.
+
+3. Define an error `ErrCorpusIsEmpty` to signal when the file is empty. To do it correctly, start by defining a type `corpusError` that is an alias to string. Then, define the `Error()` method on that type. The implementation of the method can simply return the string of the error value.
+
+4. Define a function `ReadCorpus`. The function will take the path to the file, and will return a slice of strings and an error.
+
+5. Implement the function as below:
+    + Read the file contents using `os.ReadFile`.
+    + if an error is found, return the appropriate error (HINT: use `fmt.Errorf`).
+    + if the file is empty, return the error `ErrCorpusIsEmpty`.
+    + Use the `strings.Fields` function to get the list of words from the file, and return it.
+
+6. Create a file `corpus_test.go` to test the exposed functionality from the `corpus.go` file. Implement the `TestReadCorpus` function and test different cases (including empty file, etc.)
+
+## v8: picking up a word from the corpus
+
+1. Define the function `pickWord` in `corpus.go` that takes the slice of strings (corpus) and return the selected word as a string.
+
+2. Implement the function as follows:
+    + initialize the seed of the random number generator using the current time in nanos.
+    + get a random index from the corpus
+    + return the word
+
+3. Implement a test for this function. To confirm it works as expected, we will check that a list from the corpus is returned. First of all, define a helper function `inCorpus` that takes the corpus and the word and returns whether it is in there or not.
+
+4. Then, implement the `TestPickWord` in `corpus_internal_test.go` by generating a dummy corpus and validating that we get a random word from the list.
+
+5. Refactor the `New()` function so that it now receives the reader, the corpus and the maxAttempts. (the idea is that the solution will be computed in the implementation from the corpus). Also, the `New` function signature should be enhanced to return an error too.
+
+6. In `New`, start by making sure that the corpus received is not empty, and then, when initializing the game, make sure you're picking a random word from it.
+
+7. Adjust all the files that fail to compile because of the change in `New`.
+
+8. Make the necessary changes in `main.go` so that the corpus is read and passed to the game.
+
 ## ToDo
+
+
+### ByteSlice
+
+Create a type ByteSlice that aliases a `[]byte` and transform the `Append()` function so that it satisfies the `io.Writer` interface.
+
+Confirm that when doing so, you can use methods such as `fmt.Fprintf` to load byteslices.
+
+As an illustration of pointers vs. values, confirm that the compiler allows you to call a pointer method passing a value, but not the other way around.
+
+### Random numbers
+
+Libraries implementing random number generators need to comply with very strict requirements to be considered *safe*. For example, the must generate numbers with the same probability and amount of time.
+
+In Go, the `math/rand` package provides a random number generator, but `crypto/rand` is the one that guarantees truly random numbers, while `math/rand` doesn't. However, the methods in `crypto` are a lot more expensive.
+
+Both packages expose `Intn(n int)` and similar to return random numbers. Also, to truly generate random numbers we'd need to call `Seed(n int)`. By default, the source used to be set as the programmer had used `Seed(1)`. The most common way to get truly random numbers is to pass the time in nanos, although in the newer Go releases the generator is initialized at program startup.
+
+Note that calling `Seed()` more than once in a program is not a good idea.
+
+### Interfaces
+
+A type can implement multiple interfaces. As an example, define a type `Sequence` as an ordered collection of ints (`[]int`).
+
+Then implement the `sort.Interface` for `Sequence`, which requires the definition of `Len`, `Less` and `Swap`.
+
+Define also the `Copy` method that returns a copy of the sequence.
+
+Finally, make Sequence to also implement the *Stringer* interface, and in the implementation, sort the  sequece before printing it.
+
+That is, it should print:
+
+```go
+s := Sequence{4, 1, 2, 5, 3}
+fmt.Println(s) // [1 2 3 4 5]
+```

@@ -14,4 +14,12 @@
 
 ## [05 &mdash; Tracing lib using defer](01_mini-projects/05_tracing-defer/README.md)
 
-## [06 &mdash; Hello, HTTP using gin](01)
+## [06 &mdash; Hello, HTTP using gin](01_mini-projects/06_hello-http-gin/README.md)
+
+## [07 &mdash; Hello, reading files](01_mini-projects/07_hello-reading-files/README.md)
+
+## [08 &mdash; Grokking iota in enumerations](01_mini-projects/08_iota-grokking-iota/README.md)
+
+## [09 &mdash; ByteSize a lib to display storage sizes](01_mini-projects/09_bytesize/README.md)
+
+## [10 &mdash; Grokking pointers vs. values](01_mini-projects/10_pointers-vs-values/README.md)

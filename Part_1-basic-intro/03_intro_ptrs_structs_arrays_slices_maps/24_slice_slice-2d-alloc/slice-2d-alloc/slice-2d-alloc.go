@@ -48,7 +48,7 @@ func main() {
 	fmt.Println(scr)
 
 	// Allocation option #2: using a single allocation, then readjusting
-	var scr2 TextScreen = make([][]byte, Rows)
+	var scr2 TextScreen = make(TextScreen, Rows)	// same as make([][]byte, Rows)
 
 	// Allocate all the screen bytes in one shot
 	scrBytes := make([]byte, Rows*Cols)
