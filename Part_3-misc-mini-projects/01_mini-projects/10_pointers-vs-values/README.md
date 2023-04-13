@@ -126,3 +126,21 @@ myStructPtr.ptrReceiver()     // OK
 ```
 
 With respect to changing the values, the same that applies to the functions apply to the methods with respect to the receiver.
+
+A common technique you'll find in methods with pointer receivers is the following:
+
+```go
+func (p *person) changePerson(other person) {
+	*p = other
+}
+
+p1 := person{
+	name: "Jason Isaacs",
+	age: 57,
+}
+p1.changePerson(person{"Idris Elba", 49})
+```
+
+Note how in the function implementation, we just make `*p`, that is, the contents of the memory where `p` is pointing to have different values by simply copying the struct.
+
+The same technique can be used for slices.

@@ -211,6 +211,12 @@ func doubleSliceElems(s []int) {
 	}
 }
 
+func (p *person) changePerson(other person) {
+	*p = other
+// 	p.name = other.name
+// 	p.age = other.age
+}
+
 func main() {
 	myInt := 5
 	myFloat := 5.4321
@@ -310,5 +316,12 @@ func main() {
 	s := []int{0, 1, 2, 3, 4}
 	doubleSliceElems(s)
 	fmt.Println(s)
+
+	p1 := person{
+		name: "Jason Isaacs",
+		age: 57,
+	}
+	p1.changePerson(person{"Idris Elba", 49})
+	fmt.Println(p1)
 }
 

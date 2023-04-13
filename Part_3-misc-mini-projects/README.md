@@ -23,3 +23,13 @@
 ## [09 &mdash; ByteSize a lib to display storage sizes](01_mini-projects/09_bytesize/README.md)
 
 ## [10 &mdash; Grokking pointers vs. values](01_mini-projects/10_pointers-vs-values/README.md)
+
+## [11 &mdash; ByteSlice: a custom slice satisfying `io.Writer`interface](01_mini-projects/11_byteslice/README.md)
+
+## [12 &mdash; Throw the dice](01_mini-projects/12_random-throw-dice/README.md)
+
+## [13 &mdash; Interfaces: sequence](01_mini-projects/13_interfaces-sequence/README.md)
+
+## [14 &mdash; Hello, HTTP server (native)](01_mini-projects/14_hello-http-server/README.md)
+
+## [15 &mdash; Hello, HTTP counter (native)](01_mini-projects/15_http-http-counter/README.md)

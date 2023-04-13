@@ -213,38 +213,3 @@ The feedback will be a list of indications that can have three values: correct p
 
 ## ToDo
 
-
-### ByteSlice
-
-Create a type ByteSlice that aliases a `[]byte` and transform the `Append()` function so that it satisfies the `io.Writer` interface.
-
-Confirm that when doing so, you can use methods such as `fmt.Fprintf` to load byteslices.
-
-As an illustration of pointers vs. values, confirm that the compiler allows you to call a pointer method passing a value, but not the other way around.
-
-### Random numbers
-
-Libraries implementing random number generators need to comply with very strict requirements to be considered *safe*. For example, the must generate numbers with the same probability and amount of time.
-
-In Go, the `math/rand` package provides a random number generator, but `crypto/rand` is the one that guarantees truly random numbers, while `math/rand` doesn't. However, the methods in `crypto` are a lot more expensive.
-
-Both packages expose `Intn(n int)` and similar to return random numbers. Also, to truly generate random numbers we'd need to call `Seed(n int)`. By default, the source used to be set as the programmer had used `Seed(1)`. The most common way to get truly random numbers is to pass the time in nanos, although in the newer Go releases the generator is initialized at program startup.
-
-Note that calling `Seed()` more than once in a program is not a good idea.
-
-### Interfaces
-
-A type can implement multiple interfaces. As an example, define a type `Sequence` as an ordered collection of ints (`[]int`).
-
-Then implement the `sort.Interface` for `Sequence`, which requires the definition of `Len`, `Less` and `Swap`.
-
-Define also the `Copy` method that returns a copy of the sequence.
-
-Finally, make Sequence to also implement the *Stringer* interface, and in the implementation, sort the  sequece before printing it.
-
-That is, it should print:
-
-```go
-s := Sequence{4, 1, 2, 5, 3}
-fmt.Println(s) // [1 2 3 4 5]
-```
