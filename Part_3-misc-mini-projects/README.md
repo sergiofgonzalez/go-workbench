@@ -33,3 +33,8 @@
 ## [14 &mdash; Hello, HTTP server (native)](01_mini-projects/14_hello-http-server/README.md)
 
 ## [15 &mdash; Hello, HTTP counter (native)](01_mini-projects/15_http-http-counter/README.md)
+
+## [16 &mdash; Concurrency: Timeout and Interval](01_mini-projects/16_concurrency-timeout-and-interval/README.md)
+
+## [17 &mdash; Concurrency: Rate limiter using channels](01_mini-projects/17_concurrency-rate-limiter/README.md)
+
