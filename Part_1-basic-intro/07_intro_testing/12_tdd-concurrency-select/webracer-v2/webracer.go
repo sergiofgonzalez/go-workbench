@@ -1,7 +1,6 @@
 package webracer
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -10,17 +9,18 @@ import (
 // that responds faster. If none responds in less than 10 seconds and error is
 // returned.
 func WebRacer(url1, url2 string) (fasterURL string) {
-	start1 := time.Now()
-	http.Get(url1)
-	duration1 := time.Since(start1)
-
-	start2 := time.Now()
-	http.Get(url2)
-	duration2 := time.Since(start2)
+	duration1 := measureResponseTime(url1)
+	duration2 := measureResponseTime(url2)
 
 	if duration1 < duration2 {
 		return url1
 	}
 
 	return url2
+}
+
+func measureResponseTime(url string) time.Duration {
+	start := time.Now()
+	_, _ = http.Get(url)
+	return time.Since(start)
 }
