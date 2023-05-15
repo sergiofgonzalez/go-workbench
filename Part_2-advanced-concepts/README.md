@@ -11,3 +11,4 @@
 
 ## [Effective Go](04_effective_go/concepts.ipynb)
 
+## [gopl notes](05_gopl_notes/README.md)

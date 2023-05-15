@@ -1,0 +1,3 @@
+# Include newline separated list of exclusion patterns
+./mysql-custom-config
+./mysql-data

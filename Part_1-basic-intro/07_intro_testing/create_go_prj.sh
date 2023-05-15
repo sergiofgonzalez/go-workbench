@@ -6,6 +6,5 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-mkdir -p $1/$2
-cd $1/$2 && go mod init example.com/$1 && touch $2.go && code . && cd ../..
-
+mkdir -p $1/$2-v0
+cd $1 && echo "# $2 " >> README.md && cd $2-v0 && go mod init example.com/$2 && touch $2.go && code . && cd ../..
