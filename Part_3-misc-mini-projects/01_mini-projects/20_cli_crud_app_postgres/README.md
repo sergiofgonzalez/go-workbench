@@ -54,14 +54,25 @@ In this version we need to start refactoring the code into functions, creating t
 
 In this version we start adding tests using [sqlmock](https://github.com/DATA-DOG/go-sqlmock).
 
-This will require a bit of refactoring to make sure we use DI, so that we can effectively mock.
+This will require a bit of refactoring to make sure we use DI, so that we can effectively mock the database access.
 
+## v3: reviewing coverage and removing hardcoded conn
+
+In this iteration we review the test coverage and add a few more tests to bump up the coverage beyond 90%.
+
+Also, the connection string to Postgres is externalized in an environment variable: "POSTGRES_CONN_STRING".
+
+Therefore, you can run the main program doing something like:
+
+```bash
+POSTGRES_CONN_STRING="postgres://postgres:postgres@localhost/tododb?sslmode=disable" go run .
+```
+
+## v4: Creating a CLI app
+
+In this iteration, we create a CLI application so that records can be queried, created, retrieved, updated and deleted from the terminal window.
 
 
 ## Todo
-- [] All error use case
-- [ ] Start refactoring, forget about the db and create a service and entity layers, then maybe it can be simplified. Services should be stateless.
 
-- [ ] Include tests with sqlmock
-- [ ] Add CLI with commands that invoke the services
-- [ ] Add config so that db connection and stuff is externalized
+- [ ] Add more tests

@@ -459,6 +459,83 @@ func TestSaveSadPath(t *testing.T) {
 	})
 }
 
+func TestDeleteHappyPath(t *testing.T) {
+	t.Run("Delete existing instance", func(t *testing.T) {
+		// Establish the mock connection
+		db, mock, err := sqlmock.New()
+		if err != nil {
+			t.Fatal("error while opening the stubbed db connection", err)
+		}
+		defer db.Close()
+
+		// Set the expectations for the DB interaction first
+		sql := "DELETE FROM todos WHERE id = (.+)"
+		mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 1))
+
+		// Execute the method under test
+		r := todo.New(db)
+
+		// Assert method response and expectations
+		if err = r.Delete(&todo.ToDo{}); err != nil {
+			t.Errorf("no errors expected but got %v", err)
+		}
+
+		if err := mock.ExpectationsWereMet(); err != nil {
+			t.Errorf("there were unfulfilled expectations: %v", err)
+		}
+	})
+
+	t.Run("Delete a non existing instance", func(t *testing.T) {
+		// Establish the mock connection
+		db, mock, err := sqlmock.New()
+		if err != nil {
+			t.Fatal("error while opening the stubbed db connection", err)
+		}
+		defer db.Close()
+
+		// Set the expectations for the DB interaction first
+		sql := "DELETE FROM todos WHERE id = (.+)"
+		mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
+
+		// Execute the method under test
+		r := todo.New(db)
+
+		// Assert method response and expectations
+		if err = r.Delete(&todo.ToDo{}); err != nil {
+			t.Errorf("no errors expected but got %v", err)
+		}
+
+		if err := mock.ExpectationsWereMet(); err != nil {
+			t.Errorf("there were unfulfilled expectations: %v", err)
+		}
+	})
+}
+
+func TestDeleteSadPath(t *testing.T) {
+	// Establish the mock connection
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatal("error while opening the stubbed db connection", err)
+	}
+	defer db.Close()
+
+	// Set the expectations for the DB interaction first
+	sql := "DELETE FROM todos WHERE id = (.+)"
+	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("some fabricated error"))
+
+	// Execute the method under test
+	r := todo.New(db)
+
+	// Assert method response and expectations
+	if err = r.Delete(&todo.ToDo{}); err == nil {
+		t.Error("an error was expected but got none")
+	}
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %v", err)
+	}
+}
+
 func assertResult(t testing.TB, gotItems []todo.ToDo, expectedItems [][]driver.Value) bool {
 	t.Helper()
 

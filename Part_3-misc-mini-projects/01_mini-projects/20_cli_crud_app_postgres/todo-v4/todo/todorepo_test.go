@@ -22,7 +22,7 @@ func TestSerializeHappyPath(t *testing.T) {
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	// Execute the method under test
-	r := todo.New(db)
+	r := todo.NewRepository(db)
 
 	// Assert method response and expectations
 	if err = r.Serialize(); err != nil {
@@ -46,7 +46,7 @@ func TestSerializeSadPath(t *testing.T) {
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("some fabricated error"))
 
 	// Execute the method under test
-	r := todo.New(db)
+	r := todo.NewRepository(db)
 
 	// Assert method response and expectations
 	if err = r.Serialize(); err == nil {
@@ -97,7 +97,7 @@ func TestAllHappyPath(t *testing.T) {
 			mock.ExpectQuery(sql).WillReturnRows(mockRows)
 
 			// Execute the method under test
-			r := todo.New(db)
+			r := todo.NewRepository(db)
 
 			// Assert method response and expectations
 			todos, err := r.All()
@@ -126,7 +126,7 @@ func TestAllSadPath(t *testing.T) {
 	mock.ExpectQuery(sql).WillReturnError(fmt.Errorf("fabricated error"))
 
 	// Execute the method under test
-	r := todo.New(db)
+	r := todo.NewRepository(db)
 
 	// Assert method response and expectations
 	if _, err = r.All(); err == nil {
@@ -156,7 +156,7 @@ func TestFindByIdHappyPath(t *testing.T) {
 	mock.ExpectQuery(sql).WithArgs(1).WillReturnRows(mockRows)
 
 	// Execute the method under test
-	r := todo.New(db)
+	r := todo.NewRepository(db)
 
 	// Assert method response and expectations
 	todoItem, err := r.FindByID(1)
@@ -186,7 +186,7 @@ func TestFindByIdSadPath(t *testing.T) {
 		mock.ExpectQuery(query).WithArgs(1).WillReturnError(sql.ErrNoRows)
 
 		// Execute the method under test
-		r := todo.New(db)
+		r := todo.NewRepository(db)
 
 		// Assert method response and expectations
 		if _, err = r.FindByID(1); err != todo.ErrNotFound {
@@ -211,7 +211,7 @@ func TestFindByIdSadPath(t *testing.T) {
 		mock.ExpectQuery(query).WithArgs(1).WillReturnError(fmt.Errorf("fabricated error"))
 
 		// Execute the method under test
-		r := todo.New(db)
+		r := todo.NewRepository(db)
 
 		// Assert method response and expectations
 		if _, err = r.FindByID(1); err == nil {
@@ -265,7 +265,7 @@ func TestFindByTitleHappyPath(t *testing.T) {
 				WillReturnRows(mockRows)
 
 			// Execute the method under test
-			r := todo.New(db)
+			r := todo.NewRepository(db)
 
 			// Assert method response and expectations
 			todos, err := r.FindByTitle("This is the title I was looking for")
@@ -296,7 +296,7 @@ func TestFindByTitleSadPath(t *testing.T) {
 		WillReturnError(fmt.Errorf("fabricated error"))
 
 	// Execute the method under test
-	r := todo.New(db)
+	r := todo.NewRepository(db)
 
 	// Assert method response and expectations
 	if _, err = r.FindByTitle("Some Title"); err == nil {
@@ -329,7 +329,7 @@ func TestSaveHappyPath(t *testing.T) {
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).FromCSVString("1"))
 
 		// Execute the method under test
-		r := todo.New(db)
+		r := todo.NewRepository(db)
 
 		// Assert method response and expectations
 		if err = r.Save(&todoItem); err != nil {
@@ -364,7 +364,7 @@ func TestSaveHappyPath(t *testing.T) {
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		// Execute the method under test
-		r := todo.New(db)
+		r := todo.NewRepository(db)
 		if err = r.Save(&todoItem); err != nil {
 			t.Errorf("no errors expected but got %v", err)
 		}
@@ -406,7 +406,7 @@ func TestSaveSadPath(t *testing.T) {
 		mock.ExpectQuery(sql).WillReturnError(fmt.Errorf("some fabricated error"))
 
 		// Execute the method under test
-		r := todo.New(db)
+		r := todo.NewRepository(db)
 
 		// Assert method response and expectations
 		if err = r.Save(&todoItem); err == nil {
@@ -439,7 +439,7 @@ func TestSaveSadPath(t *testing.T) {
 			WillReturnError(fmt.Errorf("some fabricated error"))
 
 		// Execute the method under test
-		r := todo.New(db)
+		r := todo.NewRepository(db)
 		if err = r.Save(&todoItem); err != nil {
 			t.Errorf("no errors expected but got %v", err)
 		}
@@ -457,6 +457,83 @@ func TestSaveSadPath(t *testing.T) {
 			t.Errorf("there were unfulfilled expectations: %v", err)
 		}
 	})
+}
+
+func TestDeleteHappyPath(t *testing.T) {
+	t.Run("Delete existing instance", func(t *testing.T) {
+		// Establish the mock connection
+		db, mock, err := sqlmock.New()
+		if err != nil {
+			t.Fatal("error while opening the stubbed db connection", err)
+		}
+		defer db.Close()
+
+		// Set the expectations for the DB interaction first
+		sql := "DELETE FROM todos WHERE id = (.+)"
+		mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 1))
+
+		// Execute the method under test
+		r := todo.NewRepository(db)
+
+		// Assert method response and expectations
+		if err = r.Delete(&todo.ToDo{}); err != nil {
+			t.Errorf("no errors expected but got %v", err)
+		}
+
+		if err := mock.ExpectationsWereMet(); err != nil {
+			t.Errorf("there were unfulfilled expectations: %v", err)
+		}
+	})
+
+	t.Run("Delete a non existing instance", func(t *testing.T) {
+		// Establish the mock connection
+		db, mock, err := sqlmock.New()
+		if err != nil {
+			t.Fatal("error while opening the stubbed db connection", err)
+		}
+		defer db.Close()
+
+		// Set the expectations for the DB interaction first
+		sql := "DELETE FROM todos WHERE id = (.+)"
+		mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
+
+		// Execute the method under test
+		r := todo.NewRepository(db)
+
+		// Assert method response and expectations
+		if err = r.Delete(&todo.ToDo{}); err != nil {
+			t.Errorf("no errors expected but got %v", err)
+		}
+
+		if err := mock.ExpectationsWereMet(); err != nil {
+			t.Errorf("there were unfulfilled expectations: %v", err)
+		}
+	})
+}
+
+func TestDeleteSadPath(t *testing.T) {
+	// Establish the mock connection
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatal("error while opening the stubbed db connection", err)
+	}
+	defer db.Close()
+
+	// Set the expectations for the DB interaction first
+	sql := "DELETE FROM todos WHERE id = (.+)"
+	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("some fabricated error"))
+
+	// Execute the method under test
+	r := todo.NewRepository(db)
+
+	// Assert method response and expectations
+	if err = r.Delete(&todo.ToDo{}); err == nil {
+		t.Error("an error was expected but got none")
+	}
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %v", err)
+	}
 }
 
 func assertResult(t testing.TB, gotItems []todo.ToDo, expectedItems [][]driver.Value) bool {

@@ -10,8 +10,8 @@ type Repository struct {
 	db *sql.DB
 }
 
-// New returns a new repository for the ToDo model
-func New(db *sql.DB) *Repository {
+// NewRepository returns a new repository for the ToDo model
+func NewRepository(db *sql.DB) *Repository {
 	return &Repository{
 		db: db,
 	}

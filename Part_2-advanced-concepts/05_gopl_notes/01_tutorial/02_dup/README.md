@@ -49,6 +49,6 @@ Enhance the existing program so that it can either work with input received from
 
 ## v2: an alternative implementation
 
-Change the existing implementation so that instead of scanning the files using a scanner (and therfore use an streaming apporach) we read the entire file in memory, split it into newlines, and then perform the count.
+Change the existing implementation so that instead of scanning the files using a scanner (and therfore use an streaming approach) we read the entire file in memory, split it into newlines, and then perform the count.
 
 For simplicity, this solution is implemented into `main` without requiring any supporting functions.
