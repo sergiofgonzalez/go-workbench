@@ -72,6 +72,44 @@ POSTGRES_CONN_STRING="postgres://postgres:postgres@localhost/tododb?sslmode=disa
 
 In this iteration, we create a CLI application so that records can be queried, created, retrieved, updated and deleted from the terminal window.
 
+## v5: Wrapping it up
+
+As the idea is not to create a production app, but rather understand how to access a DB in a Go program, etc., this last iteration simply cleans and polishes the example.
+
++ Better project organization
++ Better choice of packages to improve DX for things such as `todo.NewRepository(db)` and `todo.NewService(repo)`.
+
+
+Let's start with the project organization. According to the notes on [02: Go Project Layout](../../../Part_2-advanced-concepts/02_go_prj_layout/concepts.ipynb), we're dealing with a quite complex CLI tool. As such, it contains certain libraries such as the Service and Repository layer, and also a CLI tool implemented in the `main.go`.
+
+Eventually we will want to create a web app out of this code, so it makes sense to use the *Everything together* section of that document which proposes something like:
+
+```
+compress/                       # Root project directory
+├── compress.go                 # Project's most relevant file
+├── go.mod
+├── go.sum
+├── encode/                     # Library code for certain prj capability
+│   └── encode.go
+├── decode/                     # Another library for another prj capability
+│   └── decode.go
+├── internal/                   # Internal lib not to be exposed outside the prj
+│   └── deflate/
+|        └── deflate.go
+├── cmd/                        # CLI application, uses same name as the prj
+│   └── compress/
+|        └── main.go
+├── .gitignore
+├── Makefile
+└── README.md
+```
+
+However, we cannot create separate libraries for the Services and the Repositories because right now they are defined in the same package and use non-exported fields such as `ToDo.id`.
+
+As making the `id` field public seems problematic, because we don't want to expose write permissions to the outside, it's better to keep them in the same package, so the reorganization will be minimal.
+
+Also, because of the same reason, we won't be able to do something like `todorepo.New`, and will keep the previous approach: `todo.NewRepo`.
+
 
 ## Todo
 
