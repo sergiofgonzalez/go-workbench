@@ -94,3 +94,143 @@ Composite literals is a compact notation for instantiating any of Go's composite
 See [03_math_gifs](03_math_gifs/README.md) for a small program that create an animated GIF consisting of Lissajous figures.
 
 ## Fetching a URL
+
+The `net/http` and `io/ioutil` packages are useful when dealing with HTTP requests and responses handling.
+
+```go
+resp, err := http.Get(url)
+if err != nil {
+  // ... handle error ...
+}
+b, err := ioutil.ReadAll(resp.Body)
+resp.Body.Close()
+```
+
+The `http.Get` function makes an HTTP request, and if there is no error, returns the result in the response struct ``resp`.
+
+The `Body` field of `resp` contains the server response as a readable stream. The function `ioutil.ReadAll` reads the entire response into a slice of bytes.
+
+Then, the `Body` stream is closed to avoid leaking resources.
+
+The field `resp.Status` holds the HTTP status code of the request.
+
+### Lab
+
+See [04_fetch_url](04_fetch_url/README.md) for an example that probes a URL received as an argument.
+
+## Concurrency: Fetching URLs concurrently
+
+One of the most interesting and novel aspects of Go is its support for concurrent programming using *goroutines* and *channels*.
+
+A goroutine is a concurrent function execution. A channel is a communication mechanism that allows one goroutine to pass values of a specified type to another goroutine.
+
+A channel is created using:
+
+```go
+ch := make(chan string)
+```
+
+You can start the execution of a new *goroutine* doing:
+
+```go
+go fetch(url, ch)
+
+func fetch(url string, ch chan<- string) {
+
+}
+```
+
+When one goroutine attempts a send or receive on a channel, it blocks until another goroutine attempts the corresponding receive or send operation, at which point the value is transferred and both goroutines proceed.
+
+```go
+ch := make(chan string)
+go fetch(url, ch)
+fmt.Printf(<-ch)  // receive from channel ch
+
+
+func fetch(url string ch chan<- string) {
+  // .. probe url and read response .../
+
+  // Send to channel ch
+  ch <- fmt.Sprintf("time elapsed: %.2fs", elapsedSeconds)
+}
+```
+
+### Lab
+
+See [05_concurrent_fetch](05_concurrent_fetch/README.md) for an example illustrating the *goroutines* and *channels* concepts.
+
+## A Web Server
+
+Go's libraries make it very easy to write a web server that responds to client requests like those made by fetch.
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", rootPathHandler)
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+}
+
+func rootPathHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("request received from %q\n", r.URL.Path)
+	fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
+}
+```
+
+The line:
+
+```go
+http.HandleFunc("/", rootPathHandler)
+```
+
+connects a handler function to incoming URLs that begin with `/` (which is all URLs).
+
+A request is represented as a struct of type `http.Request`.
+
+The previous example can be modified to add new endpoints:
+
+```go
+http.HandleFunc("/", rootPathHandler)
+http.HandleFunc("/count", countHandler)
+```
+
+In the example above:
++ A request for `/count` will go to the `countHandler`
++ Any other request (including `/count/hello`, for example) will end up being handled by `rootPathHandler`.
+
+`http.ResponseWriter` is an `io.Writer` interface, which allows you to use the interface value anywhere where where an `io.Writer` is expected. For example, we can use the following to stream the Lissajous gif to the browser:
+
+```go
+http.HandleFunc("/lissajous", func(w http.ResponseWrite, r *httpRequest) {
+  lissajous(w)
+})
+```
+
+### Lab
+
+See [06_web-server](06_web-server/README.md) for an example illustrating the concepts of this section.
+
+## Misc loose ends
+
+### Pointers
+
+Go provides pointers, that is, values that contain the address of a variable. Pointers in Go sit in the middle between the lack of control you have in C, and the complete abstraction you see in other programming languages like in Java and JavaScript.
+
+### Methods and interfaces
+
+A method is a function associated with a named type. In Go you can attach a method to almost any named type.
+
+Interfaces are abstract types that let you treat different concrete types in the same way based on what methods they have, not how they are represented or implemented.
+
+
+
+
+
+
