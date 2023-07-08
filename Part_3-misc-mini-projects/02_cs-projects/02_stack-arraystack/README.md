@@ -1,15 +1,15 @@
 # Implementation of a Stack backed by an array in Go using TDD
 
 
-## v0: implementation in package main
+## v0: initial version
 
-In this version we use TDD to build the implementation of the list data structure backed by an array of a certain fixed number of elements (ten).
+In this version we use TDD to build the implementation of the stack data structure backed by an array of a certain fixed number of elements (ten) and a fixed type for its elements (string).
 
-## v1: creating a list package
+We create it as a package, so that it can be easily used in other examples.
 
-In this version, we create a `list` package and move the implementation there.
+## v1: using generics
 
-Also a few example usages are illustrated in `main.go`.
+In this version, we use generic so that we can have stacks of different types.
 
 ## ToDo
 

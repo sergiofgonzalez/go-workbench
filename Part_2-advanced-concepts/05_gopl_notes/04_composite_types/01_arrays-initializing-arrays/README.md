@@ -1,0 +1,2 @@
+# initarr
+> practicing array initialization

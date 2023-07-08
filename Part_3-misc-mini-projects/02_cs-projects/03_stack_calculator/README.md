@@ -68,4 +68,13 @@ As the current implementation of the Stack is not very flexible (it can only hol
     + if the arg is not an int or an op, panic and exit
     + when the args are exhausted, print the result.
 
-    
+
+### StackCalc v1
+
+In this version we switch from the unflexible array implementation, to the generic one.
+
+Note to test it, run:
+
+```bash
+go run . 1 2 +
+```

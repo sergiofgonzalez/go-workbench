@@ -153,4 +153,30 @@ We follow the algorithm to the letter and use the stacks in two particular place
 - [-] Additional types for the maze as a matrix
 - [X] Does it work for non-square mazes? What are the requirements
 - [ ] Read from file
-- [ ] Generics?
+
+## v2: using the generics
+
+In this version we use the generic version of the stack. We also use the existing version of the generic stack rather than copying it within the project, using the procedure explained below:
+
+1. Find the path to the arraystack module:
+
+    ```bash
+    $ cat ../../02_stack-arraystack/arraystack-v0/go.mod
+    module example.com/arraystack
+    ```
+
+2. Edit our current module to add the dependency to this module:
+
+    ```bash
+    go mod edit \
+     --replace \
+     example.com/arraystack=../../02_stack-arraystack/arraystack-v0/
+    ```
+
+3. Now we need to `get` the module:
+
+    ```bash
+    go get example.com/arraystack
+    ```
+
+

@@ -11,6 +11,10 @@ In this version, we create a `list` package and move the implementation there.
 
 Also a few example usages are illustrated in `main.go`.
 
+## v2: list package with generics
+
+In this step we introduce generics, so that the list can work with any type.
+
 ## ToDo
 
 Make the list generic so that it can work with any type.
